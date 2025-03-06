@@ -3,7 +3,7 @@ info:
   title: FastAPI
   version: 0.1.0
 servers:
-  - url: https://wxo-l3-v2.1d13bpwyy9q7.us-east.codeengine.appdomain.cloud
+  - url: https://cmod-exp.1sp3v5eq7e8l.us-east.codeengine.appdomain.cloud
 paths:
   /:
     get:
