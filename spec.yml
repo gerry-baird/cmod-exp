@@ -1,0 +1,199 @@
+openapi: 3.0.0
+info:
+  title: FastAPI
+  version: 0.1.0
+servers:
+  - url: https://wxo-l3-v2.1d13bpwyy9q7.us-east.codeengine.appdomain.cloud
+paths:
+  /:
+    get:
+      summary: Root
+      operationId: root__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /allfolders:
+    get:
+      summary: List all folders on the connected CMOD server
+      operationId: get_folders_allfolders_get
+      responses:
+        '200':
+          description: List of all folders on the connected CMOD server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FolderList'
+  /r_BambooBank:
+    get:
+      summary: Retrieve a single document from Bamboo folder
+      operationId: r_BambooBank_r_BambooBank_get
+      parameters:
+        - name: docID
+          in: query
+          required: true
+          schema:
+            type: string
+            title: Docid
+      responses:
+        '200':
+          description: Single document in binary form
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /s_BambooBank:
+    post:
+      summary: Search for documents in Bamboo Bank folder
+      operationId: s_BambooBank_s_BambooBank_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BambooBankSearch'
+        required: true
+      responses:
+        '200':
+          description: List of matching documents
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BambooBankList'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    BambooBank:
+      properties:
+        docID:
+          type: string
+          title: Docid
+        link:
+          type: string
+          title: Link
+        mimeType:
+          type: string
+          title: Mimetype
+        AccountType:
+          type: string
+          title: Accounttype
+        StatementDate:
+          type: string
+          title: Statementdate
+        AccountNumber:
+          type: integer
+          title: Accountnumber
+      type: object
+      required:
+        - docID
+        - link
+        - mimeType
+        - AccountType
+        - StatementDate
+        - AccountNumber
+      title: BambooBank
+    BambooBankList:
+      properties:
+        number:
+          type: integer
+          title: Number
+        documents:
+          items:
+            $ref: '#/components/schemas/BambooBank'
+          type: array
+          title: Documents
+      type: object
+      required:
+        - number
+        - documents
+      title: BambooBankList
+    BambooBankSearch:
+      properties:
+        AccountType:
+          type: string
+          title: Accounttype
+        StatementDate:
+          type: string
+          title: Statementdate
+        AccountNumber:
+          type: integer
+          title: Accountnumber
+      type: object
+      required:
+        - AccountType
+        - StatementDate
+        - AccountNumber
+      title: BambooBankSearch
+    Folder:
+      properties:
+        name:
+          type: string
+          title: Name
+        description:
+          type: string
+          title: Description
+      type: object
+      required:
+        - name
+        - description
+      title: Folder
+    FolderList:
+      properties:
+        number:
+          type: integer
+          title: Number
+        folders:
+          items:
+            $ref: '#/components/schemas/Folder'
+          type: array
+          title: Folders
+      type: object
+      required:
+        - number
+        - folders
+      title: FolderList
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+              - type: string
+              - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+        - loc
+        - msg
+        - type
+      title: ValidationError
+  securitySchemes:
+    HTTPBasic:
+      type: http
+      scheme: basic
