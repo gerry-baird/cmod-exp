@@ -33,13 +33,10 @@ def cmod_proxy(request: Request, folder:str, rest_of_path:str)-> FileResponse:
     print("folder: " + folder)
     print("rest_of_path: " + rest_of_path)
 
-    encoded_folder = quote(folder, safe='')
+    encoded_folder = quote(folder, safe="")
     print("encoded_folder: " + encoded_folder)
 
-    docID_encoded = quote(rest_of_path, safe='')
-    print("encoded docID: " + docID_encoded)
-
-    filecontent = tmp.CMODRetrieveDocument(docID_encoded, encoded_folder)
+    filecontent = tmp.CMODRetrieveDocument(rest_of_path, encoded_folder)
     filename="cmod.pdf"
     with open(filename, "wb") as f:
         f.write(filecontent)
@@ -69,8 +66,8 @@ def search_folders(char: str)-> FolderList:
 
 @app.get("/r_BambooBank", summary="Retrieve a single document from Bamboo folder", response_description="Single document in binary form")
 def r_BambooBank(docID:str) -> FileResponse:
-    # docID_encoded = requests.utils.requote_uri(docID)
-    docID_encoded = quote(docID, safe='')
+    docID_encoded = requests.utils.requote_uri(docID)
+
     filename="cmod.pdf"
     foldername="Bamboo Bank"
     filecontent=tmp.CMODRetrieveDocument(docID_encoded,foldername)
@@ -96,7 +93,8 @@ async def s_BambooBank(payload: BambooBankSearch)-> BambooBankList:
         link=x[i].get("link")
         y=link.find(docID[0:2]) # link field includes valid URL information, but prefix needs to be removed (end of prefix determined by comparing with docID)
         docID=str(link[y:]) # docID extracted from link
-        link="http://"+PROXYServer+"/cmod-rest/v1/hits/Bamboo%20Bank/"+docID
+        encoded_docID = quote(docID, safe="")
+        link="http://"+PROXYServer+"/cmod-rest/v1/hits/Bamboo%20Bank/"+encoded_docID
         mimeType=x[i].get("mimeType")
         # Folder specific fields
         AccountType=x[i].get("folderFields").get("Account Type")
