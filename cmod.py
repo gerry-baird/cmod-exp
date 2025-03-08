@@ -23,6 +23,8 @@ import http.client
 import json
 import base64
 import urllib.parse
+import os
+from dotenv import load_dotenv
 #---------------------------------------------------------------------------------#
 
 # CMOD class and function definitions
@@ -39,6 +41,10 @@ RetrieveDocument
 RetrieveConvertDocument
 '''
 #---------------------------------------------------------------------------------#
+
+load_dotenv()
+CMODServer=os.getenv('CMODServer')
+CMODAuthorization=os.getenv('CMODAuthorization')
 class CMODClient: 
     def __init__ (self, CMODServer, CMODAuthorization):
         self.CMODServer=CMODServer

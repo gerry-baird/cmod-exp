@@ -42,7 +42,15 @@ paths:
           description: Single document in binary form
           content:
             application/json:
-              schema: {}
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  content:
+                    type: string
+                    x-ibm-content:
+                      value: Binary
         '422':
           description: Validation Error
           content:
