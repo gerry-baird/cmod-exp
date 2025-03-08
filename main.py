@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 import cmod
 import json
 import os
-import requests
 from urllib.parse import quote
 
 
@@ -28,7 +27,7 @@ def root():
     return {"message": "IBM Content Manager OnDemand FastAPI"}
 
 @app.get("/cmod-rest/v1/hits/{folder}/{rest_of_path:path}")
-def cmod_proxy(request: Request, folder:str, rest_of_path:str)-> FileResponse:
+def cmod_proxy(folder:str, rest_of_path:str)-> FileResponse:
 
     print("folder: " + folder)
     print("rest_of_path: " + rest_of_path)
