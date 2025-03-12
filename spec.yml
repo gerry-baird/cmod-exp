@@ -8,13 +8,42 @@ paths:
   /:
     get:
       summary: Root
-      operationId: root__get
+      operationId: root.get
       responses:
         '200':
           description: Successful Response
           content:
             application/json:
               schema: {}
+  /cmod-rest/v1/hits/{folder}/{rest_of_path}:
+    get:
+      summary: Cmod Proxy
+      operationId: cmod.proxy
+      parameters:
+        - name: folder
+          in: path
+          required: true
+          schema:
+            type: string
+            title: Folder
+        - name: rest_of_path
+          in: path
+          required: true
+          schema:
+            type: string
+            title: Rest Of Path
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
   /allfolders:
     get:
       summary: List all folders on the connected CMOD server
@@ -26,6 +55,30 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FolderList'
+  /searchfolders:
+    get:
+      summary: Search for matching folders
+      operationId: search_folders_searchfolders_get
+      parameters:
+        - name: char
+          in: query
+          required: true
+          schema:
+            type: string
+            title: Char
+      responses:
+        '200':
+          description: List of matching folders
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FolderList'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
   /r_BambooBank:
     get:
       summary: Retrieve a single document from Bamboo folder
@@ -42,15 +95,7 @@ paths:
           description: Single document in binary form
           content:
             application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                  content:
-                    type: string
-                    x-ibm-content:
-                      value: Binary
+              schema: {}
         '422':
           description: Validation Error
           content:
